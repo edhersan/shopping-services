@@ -21,6 +21,12 @@ export function sendSuccess<T>(res: VercelResponse, data: T, status = 200): void
   sendJson<T>(res, status, { success: true, data });
 }
 
+export function sendRawJson<T>(res: VercelResponse, status: number, payload: T): void {
+  applyCommonHeaders(res);
+  res.setHeader("Content-Type", "application/json; charset=utf-8");
+  res.status(status).json(payload);
+}
+
 export function sendError(res: VercelResponse, error: unknown): void {
   if (error instanceof ApiError) {
     const payload: ApiResponse<never> = {

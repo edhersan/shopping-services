@@ -2,6 +2,8 @@ import { createServer } from "node:http";
 import type { IncomingMessage, ServerResponse } from "node:http";
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import healthHandler from "../../api/health";
+import docsHandler from "../../api/docs";
+import openApiHandler from "../../api/openapi";
 import productByIdHandler from "../../api/products/[id]";
 import productsHandler from "../../api/products/index";
 import validateCartHandler from "../../api/cart/validate";
@@ -31,6 +33,8 @@ interface LocalVercelResponse {
 
 const routes: readonly RouteDefinition[] = [
   { method: "GET", pattern: /^\/api\/health\/?$/, handler: healthHandler },
+  { method: "GET", pattern: /^\/api\/docs\/?$/, handler: docsHandler },
+  { method: "GET", pattern: /^\/api\/openapi\/?$/, handler: openApiHandler },
   { method: "GET", pattern: /^\/api\/products\/?$/, handler: productsHandler },
   {
     method: "GET",
@@ -194,6 +198,6 @@ const server = createServer((req, res) => {
 
 server.listen(port, () => {
   console.log(`API local disponible en http://localhost:${port}/api`);
-  console.log("Rutas: GET /api/health, GET /api/products, GET /api/products/:id");
+  console.log("Rutas: GET /api/health, GET /api/docs, GET /api/openapi, GET /api/products, GET /api/products/:id");
   console.log("       POST /api/cart/validate, POST /api/orders, GET /api/orders/:id");
 });

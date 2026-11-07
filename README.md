@@ -45,6 +45,8 @@ type ApiResponse<T> =
 | Método | Ruta | Descripción |
 | --- | --- | --- |
 | GET | `/api/health` | Estado del servicio |
+| GET | `/api/docs` | Swagger UI interactivo |
+| GET | `/api/openapi` | Especificación OpenAPI 3.0 (JSON) |
 | GET | `/api/products?search=&category=` | Catálogo filtrado |
 | GET | `/api/products/:id` | Detalle de producto |
 | POST | `/api/cart/validate` | Valida stock y calcula totales |
@@ -52,6 +54,17 @@ type ApiResponse<T> =
 | GET | `/api/orders/:id` | Consulta una orden |
 
 Errores: `400` validación, `402` pago rechazado, `404` no encontrado, `405` método no permitido, `409` stock insuficiente.
+
+### Documentación interactiva (Swagger)
+
+Con el servidor iniciado:
+
+- Swagger UI: `http://localhost:3000/api/docs`
+- Especificación OpenAPI 3.0: `http://localhost:3000/api/openapi`
+
+En Vercel: `https://<tu-proyecto>.vercel.app/api/docs`.
+
+Desde Swagger UI puedes probar todos los endpoints (incluido el pago simulado) con el botón **Try it out**. La interfaz carga Swagger UI desde el CDN de unpkg, por lo que necesita conexión a internet.
 
 ### Validar carrito
 
@@ -100,6 +113,8 @@ curl -X POST http://localhost:3000/api/orders \
 shopping-services/
 ├─ api/                  # Vercel Functions (una entrada por ruta)
 │  ├─ health.ts
+│  ├─ docs.ts            # Swagger UI
+│  ├─ openapi.ts         # Especificación OpenAPI
 │  ├─ products/index.ts
 │  ├─ products/[id].ts
 │  ├─ cart/validate.ts
@@ -108,6 +123,7 @@ shopping-services/
 ├─ src/
 │  ├─ data/products.ts   # Catálogo seed
 │  ├─ dev/server.ts      # Servidor local de desarrollo
+│  ├─ docs/openapi.ts    # Documento OpenAPI 3.0
 │  ├─ lib/               # HTTP, errores y validación
 │  ├─ services/          # Lógica de negocio
 │  ├─ store/orders.ts    # Órdenes en memoria
