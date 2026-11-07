@@ -1,5 +1,7 @@
 import { createServer } from "node:http";
 import type { IncomingMessage, ServerResponse } from "node:http";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import healthHandler from "../../api/health";
 import docsHandler from "../../api/docs";
@@ -31,7 +33,19 @@ interface LocalVercelResponse {
   end(chunk?: string): LocalVercelResponse;
 }
 
+const LANDING_HTML = readFileSync(
+  join(process.cwd(), "public", "index.html"),
+  "utf8",
+);
+
+const landingHandler: Handler = (_req, res) => {
+  res.setHeader("Content-Type", "text/html; charset=utf-8");
+  res.setHeader("Cache-Control", "no-store");
+  res.status(200).end(LANDING_HTML);
+};
+
 const routes: readonly RouteDefinition[] = [
+  { method: "GET", pattern: /^\/$/, handler: landingHandler },
   { method: "GET", pattern: /^\/api\/health\/?$/, handler: healthHandler },
   { method: "GET", pattern: /^\/api\/docs\/?$/, handler: docsHandler },
   { method: "GET", pattern: /^\/api\/openapi\/?$/, handler: openApiHandler },
@@ -198,6 +212,7 @@ const server = createServer((req, res) => {
 
 server.listen(port, () => {
   console.log(`API local disponible en http://localhost:${port}/api`);
+  console.log("Landing: GET /");
   console.log("Rutas: GET /api/health, GET /api/docs, GET /api/openapi, GET /api/products, GET /api/products/:id");
   console.log("       POST /api/cart/validate, POST /api/orders, GET /api/orders/:id");
 });

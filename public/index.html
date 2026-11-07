@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Shopping Services API</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --primary: #0f766e;
+        --primary-soft: #ccfbf1;
+        --text: #0f172a;
+        --muted: #64748b;
+        --border: #e2e8f0;
+        --surface: #ffffff;
+        --background: #f8fafc;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        align-items: center;
+        background: var(--background);
+        color: var(--text);
+        display: flex;
+        font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        justify-content: center;
+        margin: 0;
+        min-height: 100vh;
+        padding: 32px 16px;
+      }
+
+      main {
+        max-width: 860px;
+        width: 100%;
+      }
+
+      .badge {
+        background: var(--primary-soft);
+        border-radius: 999px;
+        color: var(--primary);
+        display: inline-block;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        padding: 6px 12px;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        font-size: clamp(28px, 5vw, 42px);
+        letter-spacing: -0.03em;
+        line-height: 1.1;
+        margin: 18px 0 12px;
+      }
+
+      .lead {
+        color: var(--muted);
+        font-size: 16px;
+        line-height: 1.6;
+        margin: 0;
+        max-width: 680px;
+      }
+
+      .grid {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        margin-top: 32px;
+      }
+
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        color: inherit;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        padding: 18px;
+        text-decoration: none;
+        transition: border-color 120ms ease, box-shadow 120ms ease,
+          transform 120ms ease;
+      }
+
+      .card:hover {
+        border-color: var(--primary);
+        box-shadow: 0 10px 24px rgba(15, 118, 110, 0.12);
+        transform: translateY(-2px);
+      }
+
+      .card.featured {
+        background: var(--primary);
+        border-color: var(--primary);
+        color: #ffffff;
+      }
+
+      .card.featured .label,
+      .card.featured .hint {
+        color: rgba(255, 255, 255, 0.78);
+      }
+
+      .label {
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .card strong {
+        font-size: 18px;
+      }
+
+      .hint {
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
+      .endpoints {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        margin-top: 16px;
+        padding: 18px;
+      }
+
+      .endpoints h2 {
+        font-size: 15px;
+        margin: 0 0 12px;
+      }
+
+      .endpoints ul {
+        display: grid;
+        gap: 8px;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .endpoints li {
+        align-items: center;
+        color: var(--muted);
+        display: flex;
+        font-size: 13px;
+        gap: 8px;
+      }
+
+      .method {
+        border-radius: 6px;
+        font-size: 10px;
+        font-weight: 800;
+        padding: 3px 6px;
+      }
+
+      .method.get {
+        background: #dcfce7;
+        color: #15803d;
+      }
+
+      .method.post {
+        background: #fef3c7;
+        color: #b45309;
+      }
+
+      .endpoints code {
+        color: var(--text);
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 12px;
+      }
+
+      .note {
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.6;
+        margin: 18px 2px 0;
+      }
+
+      .note a {
+        color: var(--primary);
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <span class="badge">Vercel Functions · OpenAPI 3.0</span>
+      <h1>Shopping Services API</h1>
+      <p class="lead">
+        Microservicios serverless de catálogo, carrito, órdenes y pago simulado.
+        Esta raíz no expone datos: usa los siguientes accesos para explorar la API.
+      </p>
+
+      <div class="grid">
+        <a class="card featured" href="/api/docs">
+          <span class="label">Documentación</span>
+          <strong>Swagger UI</strong>
+          <span class="hint">Explora y prueba los endpoints con Try it out.</span>
+        </a>
+        <a class="card" href="/api/openapi">
+          <span class="label">Contrato</span>
+          <strong>OpenAPI JSON</strong>
+          <span class="hint">Especificación OpenAPI 3.0 completa.</span>
+        </a>
+        <a class="card" href="/api/health">
+          <span class="label">Sistema</span>
+          <strong>Health check</strong>
+          <span class="hint">GET /api/health</span>
+        </a>
+        <a class="card" href="/api/products">
+          <span class="label">Catálogo</span>
+          <strong>Productos</strong>
+          <span class="hint">GET /api/products</span>
+        </a>
+      </div>
+
+      <section class="endpoints">
+        <h2>Endpoints disponibles</h2>
+        <ul>
+          <li>
+            <span class="method get">GET</span>
+            <code>/api/products?search=&amp;category=</code>
+          </li>
+          <li>
+            <span class="method get">GET</span>
+            <code>/api/products/:id</code>
+          </li>
+          <li>
+            <span class="method post">POST</span>
+            <code>/api/cart/validate</code>
+          </li>
+          <li>
+            <span class="method post">POST</span>
+            <code>/api/orders</code>
+          </li>
+          <li>
+            <span class="method get">GET</span>
+            <code>/api/orders/:id</code>
+          </li>
+          <li>
+            <span class="method get">GET</span>
+            <code>/api/openapi</code>
+          </li>
+        </ul>
+      </section>
+
+      <p class="note">
+        Pago simulado: las tarjetas terminadas en <code>0000</code> se rechazan
+        con HTTP 402. El catálogo y las órdenes viven en memoria y se reinician
+        en cada cold start. Consulta la
+        <a href="/api/docs">documentación interactiva</a> para ver esquemas y
+        ejemplos.
+      </p>
+    </main>
+  </body>
+</html>

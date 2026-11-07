@@ -59,10 +59,14 @@ Errores: `400` validación, `402` pago rechazado, `404` no encontrado, `405` mé
 
 Con el servidor iniciado:
 
+- Página de inicio: `http://localhost:3000/`
 - Swagger UI: `http://localhost:3000/api/docs`
 - Especificación OpenAPI 3.0: `http://localhost:3000/api/openapi`
 
-En Vercel: `https://<tu-proyecto>.vercel.app/api/docs`.
+En Vercel:
+
+- Inicio: `https://<tu-proyecto>.vercel.app/`
+- Swagger: `https://<tu-proyecto>.vercel.app/api/docs`
 
 Desde Swagger UI puedes probar todos los endpoints (incluido el pago simulado) con el botón **Try it out**. La interfaz carga Swagger UI desde el CDN de unpkg, por lo que necesita conexión a internet.
 
@@ -120,6 +124,8 @@ shopping-services/
 │  ├─ cart/validate.ts
 │  ├─ orders/index.ts
 │  └─ orders/[id].ts
+├─ public/
+│  └─ index.html         # Landing del deployment (raíz /)
 ├─ src/
 │  ├─ data/products.ts   # Catálogo seed
 │  ├─ dev/server.ts      # Servidor local de desarrollo
