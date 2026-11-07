@@ -1,0 +1,20 @@
+{
+  "name": "shopping-services",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Microservicios serverless de catálogo, carrito y órdenes para la Shopping App, listos para Vercel Functions.",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "tsx watch src/dev/server.ts",
+    "dev:vercel": "npx --yes vercel dev --listen 3000",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@vercel/node": "^30.0.0",
+    "tsx": "^4.23.15",
+    "typescript": "~6.0.3"
+  }
+}
