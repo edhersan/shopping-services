@@ -193,8 +193,8 @@ function validateEmail(value: unknown, errors: string[]): string | undefined {
 }
 
 function validatePassword(value: unknown, errors: string[]): string | undefined {
-  if (typeof value !== "string" || value.length < 8) {
-    errors.push("La contraseña debe tener al menos 8 caracteres.");
+  if (typeof value !== "string" || value.length < 4) {
+    errors.push("La contraseña debe tener al menos 4 caracteres.");
     return undefined;
   }
 

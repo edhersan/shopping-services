@@ -6,7 +6,7 @@ import {
 } from "node:crypto";
 import type { VercelRequest } from "@vercel/node";
 import { ApiError } from "./errors";
-import { findUserById } from "../store/users";
+import { findUserById, seedDefaultUsers } from "../store/users";
 import type { PublicUser, StoredUser } from "../types";
 
 const PASSWORD_ITERATIONS = 120_000;
@@ -169,3 +169,20 @@ export function userFromToken(req: VercelRequest): PublicUser {
   const { passwordHash: _passwordHash, ...user } = authenticateRequest(req);
   return user;
 }
+
+seedDefaultUsers([
+  {
+    username: "expo",
+    name: "Expo",
+    email: "expo@example.com",
+    passwordHash: hashPassword("1234"),
+    role: "customer",
+  },
+  {
+    username: "admin",
+    name: "Administrador",
+    email: "admin@example.com",
+    passwordHash: hashPassword("admin123"),
+    role: "admin",
+  },
+]);

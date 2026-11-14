@@ -98,8 +98,10 @@ export interface HealthPayload {
 
 export interface PublicUser {
   id: string;
+  username: string;
   name: string;
   email: string;
+  role: "customer" | "admin";
   createdAt: string;
 }
 

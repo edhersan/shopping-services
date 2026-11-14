@@ -58,7 +58,7 @@ type ApiResponse<T> =
 
 Errores: `400` validación, `402` pago rechazado, `404` no encontrado, `405` método no permitido, `409` stock insuficiente.
 
-Las rutas privadas reciben el token mediante `Authorization: Bearer <token>`. El registro y el inicio de sesión responden con `{ token, user }` dentro del sobre estándar de la API. El login acepta `identifier` (nombre de usuario o correo electrónico) y `password`; también mantiene compatibilidad con los campos `username`, `user` y `email`. Los usuarios se almacenan en memoria, igual que las órdenes y el stock, por lo que se reinician en cada cold start o redeploy.
+Las rutas privadas reciben el token mediante `Authorization: Bearer <token>`. El registro y el inicio de sesión responden con `{ token, user }` dentro del sobre estándar de la API. El login acepta `identifier` (nombre de usuario o correo electrónico) y `password`; también mantiene compatibilidad con los campos `username`, `user` y `email`. Para pruebas existen `expo / 1234` y `admin / admin123`. Los usuarios se almacenan en memoria, igual que las órdenes y el stock, por lo que se reinician en cada cold start o redeploy.
 
 ### Documentación interactiva (Swagger)
 

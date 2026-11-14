@@ -548,11 +548,13 @@ export const openApiDocument = {
           },
           PublicUser: {
             type: "object",
-            required: ["id", "name", "email", "createdAt"],
+            required: ["id", "username", "name", "email", "role", "createdAt"],
             properties: {
               id: { type: "string", example: "usr_9860d85368b8" },
+              username: { type: "string", example: "expo" },
               name: { type: "string", example: "Ana Torres" },
               email: { type: "string", format: "email", example: "ana@example.com" },
+              role: { type: "string", enum: ["customer", "admin"], example: "customer" },
               createdAt: { type: "string", format: "date-time" },
             },
           },
@@ -566,7 +568,7 @@ export const openApiDocument = {
                 description: "Nombre de usuario o correo electrónico.",
                 example: "Ana Torres",
               },
-              password: { type: "string", minLength: 8, example: "password123" },
+              password: { type: "string", minLength: 4, example: "password123" },
             },
           },
           RegisterUserRequest: {
