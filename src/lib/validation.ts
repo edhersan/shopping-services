@@ -1,5 +1,12 @@
 import { ApiError } from "./errors";
-import type { CreateOrderRequest, Customer, OrderLineInput, PaymentRequest } from "../types";
+import type {
+  AuthCredentials,
+  CreateOrderRequest,
+  Customer,
+  OrderLineInput,
+  PaymentRequest,
+  RegisterUserRequest,
+} from "../types";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const ZIP_PATTERN = /^[0-9A-Za-z -]{3,10}$/;
@@ -174,4 +181,55 @@ export function validateCreateOrderRequest(body: unknown): CreateOrderRequest {
   }
 
   return { items, customer, payment };
+}
+
+function validateEmail(value: unknown, errors: string[]): string | undefined {
+  if (typeof value !== "string" || !EMAIL_PATTERN.test(value.trim())) {
+    errors.push("El correo electrónico no es válido.");
+    return undefined;
+  }
+
+  return value.trim().toLowerCase();
+}
+
+function validatePassword(value: unknown, errors: string[]): string | undefined {
+  if (typeof value !== "string" || value.length < 8) {
+    errors.push("La contraseña debe tener al menos 8 caracteres.");
+    return undefined;
+  }
+
+  return value;
+}
+
+export function validateAuthCredentials(body: unknown): AuthCredentials {
+  if (!isRecord(body)) {
+    throw new ApiError(400, "VALIDATION_ERROR", "El cuerpo de la solicitud es inválido.");
+  }
+
+  const errors: string[] = [];
+  const email = validateEmail(body.email, errors);
+  const password = validatePassword(body.password, errors);
+
+  if (!email || !password || errors.length > 0) {
+    throw new ApiError(400, "VALIDATION_ERROR", "Revisa las credenciales enviadas.", errors);
+  }
+
+  return { email, password };
+}
+
+export function validateRegisterUserRequest(body: unknown): RegisterUserRequest {
+  if (!isRecord(body)) {
+    throw new ApiError(400, "VALIDATION_ERROR", "El cuerpo de la solicitud es inválido.");
+  }
+
+  const errors: string[] = [];
+  const name = stringField(body, "name", "El nombre", 3, errors);
+  const email = validateEmail(body.email, errors);
+  const password = validatePassword(body.password, errors);
+
+  if (!name || !email || !password || errors.length > 0) {
+    throw new ApiError(400, "VALIDATION_ERROR", "Revisa los datos de registro.", errors);
+  }
+
+  return { name, email, password };
 }

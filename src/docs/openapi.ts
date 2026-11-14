@@ -8,7 +8,7 @@ export const openApiDocument = {
       "",
       "Reglas de negocio: impuesto del 8%, envío de $5.99 (gratis desde $100) y máximo de 99 unidades por línea.",
       "El pago es simulado: las tarjetas terminadas en 0000 se rechazan con HTTP 402.",
-      "Las órdenes y el stock viven en memoria y se reinician en cada cold start.",
+      "Los usuarios, las órdenes y el stock viven en memoria y se reinician en cada cold start.",
     ].join("\n"),
     contact: {
       name: "Shopping App",
@@ -27,12 +27,96 @@ export const openApiDocument = {
   ],
   tags: [
     { name: "Sistema", description: "Salud y documentación" },
+    { name: "Autenticación", description: "Registro, inicio de sesión y usuario actual" },
     { name: "Catálogo", description: "Productos disponibles" },
     { name: "Carrito", description: "Validación de precios y stock" },
     { name: "Órdenes", description: "Checkout y pago simulado" },
   ],
   security: [],
   paths: {
+    "/auth/login": {
+      post: {
+        tags: ["Autenticación"],
+        operationId: "login",
+        summary: "Inicia sesión y devuelve un JWT",
+        security: [],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/AuthCredentials" },
+              example: { email: "ana@example.com", password: "password123" },
+            },
+          },
+        },
+        responses: {
+          "200": {
+            description: "Sesión iniciada",
+            content: {
+              "application/json": {
+                schema: { $ref: "#/components/schemas/AuthResponse" },
+              },
+            },
+          },
+          "400": { $ref: "#/components/responses/BadRequest" },
+          "401": { $ref: "#/components/responses/Unauthorized" },
+          "500": { $ref: "#/components/responses/InternalError" },
+        },
+      },
+    },
+    "/auth/register": {
+      post: {
+        tags: ["Autenticación"],
+        operationId: "register",
+        summary: "Registra un usuario y devuelve un JWT",
+        security: [],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/RegisterUserRequest" },
+              example: {
+                name: "Ana Torres",
+                email: "ana@example.com",
+                password: "password123",
+              },
+            },
+          },
+        },
+        responses: {
+          "201": {
+            description: "Usuario registrado",
+            content: {
+              "application/json": {
+                schema: { $ref: "#/components/schemas/AuthResponse" },
+              },
+            },
+          },
+          "400": { $ref: "#/components/responses/BadRequest" },
+          "409": { $ref: "#/components/responses/Conflict" },
+          "500": { $ref: "#/components/responses/InternalError" },
+        },
+      },
+    },
+    "/auth/me": {
+      get: {
+        tags: ["Autenticación"],
+        operationId: "getCurrentUser",
+        summary: "Obtiene el usuario autenticado",
+        security: [{ bearerAuth: [] }],
+        responses: {
+          "200": {
+            description: "Usuario autenticado",
+            content: {
+              "application/json": {
+                schema: { $ref: "#/components/schemas/PublicUserResponse" },
+              },
+            },
+          },
+          "401": { $ref: "#/components/responses/Unauthorized" },
+        },
+      },
+    },
     "/health": {
       get: {
         tags: ["Sistema"],
@@ -269,6 +353,13 @@ export const openApiDocument = {
     },
   },
   components: {
+    securitySchemes: {
+      bearerAuth: {
+        type: "http",
+        scheme: "bearer",
+        bearerFormat: "JWT",
+      },
+    },
     schemas: {
       Product: {
         type: "object",
@@ -455,6 +546,59 @@ export const openApiDocument = {
             format: "date-time",
             example: "2026-11-07T15:30:00.000Z",
           },
+          PublicUser: {
+            type: "object",
+            required: ["id", "name", "email", "createdAt"],
+            properties: {
+              id: { type: "string", example: "usr_9860d85368b8" },
+              name: { type: "string", example: "Ana Torres" },
+              email: { type: "string", format: "email", example: "ana@example.com" },
+              createdAt: { type: "string", format: "date-time" },
+            },
+          },
+          AuthCredentials: {
+            type: "object",
+            required: ["email", "password"],
+            properties: {
+              email: { type: "string", format: "email", example: "ana@example.com" },
+              password: { type: "string", minLength: 8, example: "password123" },
+            },
+          },
+          RegisterUserRequest: {
+            allOf: [
+              { $ref: "#/components/schemas/AuthCredentials" },
+              {
+                type: "object",
+                required: ["name"],
+                properties: {
+                  name: { type: "string", minLength: 3, example: "Ana Torres" },
+                },
+              },
+            ],
+          },
+          AuthResponse: {
+            type: "object",
+            required: ["success", "data"],
+            properties: {
+              success: { type: "boolean", enum: [true], example: true },
+              data: {
+                type: "object",
+                required: ["token", "user"],
+                properties: {
+                  token: { type: "string", example: "eyJhbGciOiJIUzI1NiIs..." },
+                  user: { $ref: "#/components/schemas/PublicUser" },
+                },
+              },
+            },
+          },
+          PublicUserResponse: {
+            type: "object",
+            required: ["success", "data"],
+            properties: {
+              success: { type: "boolean", enum: [true], example: true },
+              data: { $ref: "#/components/schemas/PublicUser" },
+            },
+          },
         },
       },
       ApiError: {
@@ -526,6 +670,22 @@ export const openApiDocument = {
       },
     },
     responses: {
+      Unauthorized: {
+        description: "Autenticación requerida o token inválido",
+        content: {
+          "application/json": {
+            schema: { $ref: "#/components/schemas/ErrorResponse" },
+          },
+        },
+      },
+      InternalError: {
+        description: "Error de configuración o del servidor",
+        content: {
+          "application/json": {
+            schema: { $ref: "#/components/schemas/ErrorResponse" },
+          },
+        },
+      },
       BadRequest: {
         description: "Datos de entrada inválidos",
         content: {

@@ -11,6 +11,9 @@ import productsHandler from "../../api/products/index";
 import validateCartHandler from "../../api/cart/validate";
 import orderByIdHandler from "../../api/orders/[id]";
 import ordersHandler from "../../api/orders/index";
+import loginHandler from "../../api/auth/login";
+import registerHandler from "../../api/auth/register";
+import meHandler from "../../api/auth/me";
 import { ApiError } from "../lib/errors";
 import { handleOptions, sendError } from "../lib/http";
 
@@ -49,6 +52,9 @@ const routes: readonly RouteDefinition[] = [
   { method: "GET", pattern: /^\/api\/health\/?$/, handler: healthHandler },
   { method: "GET", pattern: /^\/api\/docs\/?$/, handler: docsHandler },
   { method: "GET", pattern: /^\/api\/openapi\/?$/, handler: openApiHandler },
+  { method: "POST", pattern: /^\/api\/auth\/login\/?$/, handler: loginHandler },
+  { method: "POST", pattern: /^\/api\/auth\/register\/?$/, handler: registerHandler },
+  { method: "GET", pattern: /^\/api\/auth\/me\/?$/, handler: meHandler },
   { method: "GET", pattern: /^\/api\/products\/?$/, handler: productsHandler },
   {
     method: "GET",

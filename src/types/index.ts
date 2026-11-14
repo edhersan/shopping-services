@@ -95,3 +95,28 @@ export interface HealthPayload {
   service: string;
   timestamp: string;
 }
+
+export interface PublicUser {
+  id: string;
+  name: string;
+  email: string;
+  createdAt: string;
+}
+
+export interface StoredUser extends PublicUser {
+  passwordHash: string;
+}
+
+export interface AuthCredentials {
+  email: string;
+  password: string;
+}
+
+export interface RegisterUserRequest extends AuthCredentials {
+  name: string;
+}
+
+export interface AuthResponse {
+  token: string;
+  user: PublicUser;
+}

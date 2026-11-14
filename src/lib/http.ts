@@ -7,7 +7,8 @@ const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN ?? "*";
 function applyCommonHeaders(res: VercelResponse): void {
   res.setHeader("Access-Control-Allow-Origin", ALLOWED_ORIGIN);
   res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.setHeader("Vary", "Origin");
   res.setHeader("Cache-Control", "no-store");
 }
 

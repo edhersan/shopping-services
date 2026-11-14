@@ -1,6 +1,6 @@
 # Shopping Services
 
-Microservicios serverless en Node.js/TypeScript para una app de compras: catálogo, validación de carrito, órdenes y pago simulado. Diseñados para desplegarse directamente como **Vercel Functions** desde la carpeta `api/`.
+Microservicios serverless en Node.js/TypeScript para una app de compras: autenticación, catálogo, validación de carrito, órdenes y pago simulado. Diseñados para desplegarse directamente como **Vercel Functions** desde la carpeta `api/`.
 
 Este repositorio es independiente: no depende del monorepo de la app móvil y puede publicarse en GitHub y desplegarse en Vercel por sí solo.
 
@@ -45,6 +45,9 @@ type ApiResponse<T> =
 | Método | Ruta | Descripción |
 | --- | --- | --- |
 | GET | `/api/health` | Estado del servicio |
+| POST | `/api/auth/register` | Registra un usuario y devuelve un JWT |
+| POST | `/api/auth/login` | Inicia sesión y devuelve un JWT |
+| GET | `/api/auth/me` | Devuelve el usuario del JWT enviado |
 | GET | `/api/docs` | Swagger UI interactivo |
 | GET | `/api/openapi` | Especificación OpenAPI 3.0 (JSON) |
 | GET | `/api/products?search=&category=` | Catálogo filtrado |
@@ -54,6 +57,8 @@ type ApiResponse<T> =
 | GET | `/api/orders/:id` | Consulta una orden |
 
 Errores: `400` validación, `402` pago rechazado, `404` no encontrado, `405` método no permitido, `409` stock insuficiente.
+
+Las rutas privadas reciben el token mediante `Authorization: Bearer <token>`. El registro y el inicio de sesión responden con `{ token, user }` dentro del sobre estándar de la API. Los usuarios se almacenan en memoria, igual que las órdenes y el stock, por lo que se reinician en cada cold start o redeploy.
 
 ### Documentación interactiva (Swagger)
 
@@ -116,6 +121,7 @@ curl -X POST http://localhost:3000/api/orders \
 ```text
 shopping-services/
 ├─ api/                  # Vercel Functions (una entrada por ruta)
+│  ├─ auth/              # Registro, login y usuario actual
 │  ├─ health.ts
 │  ├─ docs.ts            # Swagger UI
 │  ├─ openapi.ts         # Especificación OpenAPI
@@ -146,9 +152,11 @@ Copia `.env.example` a `.env` si necesitas cambiar el origen permitido:
 
 ```bash
 ALLOWED_ORIGIN=*
+JWT_SECRET=replace-with-a-long-random-secret
 ```
 
 - `ALLOWED_ORIGIN`: origen permitido por CORS. Usa `*` para la demo o el dominio de tu app.
+- `JWT_SECRET`: clave privada de al menos 32 caracteres para firmar los tokens JWT.
 
 ## Desplegar en Vercel
 
