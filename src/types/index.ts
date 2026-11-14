@@ -108,12 +108,14 @@ export interface StoredUser extends PublicUser {
 }
 
 export interface AuthCredentials {
-  email: string;
+  identifier: string;
   password: string;
 }
 
-export interface RegisterUserRequest extends AuthCredentials {
+export interface RegisterUserRequest {
   name: string;
+  email: string;
+  password: string;
 }
 
 export interface AuthResponse {

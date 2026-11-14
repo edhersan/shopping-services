@@ -10,7 +10,7 @@ import {
   verifyPassword,
 } from "../../src/lib/auth";
 import { validateAuthCredentials } from "../../src/lib/validation";
-import { findUserByEmail, publicUser } from "../../src/store/users";
+import { findUserByIdentifier, publicUser } from "../../src/store/users";
 import type { AuthResponse } from "../../src/types";
 import { ApiError } from "../../src/lib/errors";
 
@@ -21,10 +21,10 @@ export default function handler(req: VercelRequest, res: VercelResponse): void {
 
   try {
     const credentials = validateAuthCredentials(readJsonBody(req));
-    const user = findUserByEmail(credentials.email);
+    const user = findUserByIdentifier(credentials.identifier);
 
     if (!user || !verifyPassword(credentials.password, user.passwordHash)) {
-      throw new ApiError(401, "INVALID_CREDENTIALS", "El correo o la contraseña son incorrectos.");
+      throw new ApiError(401, "INVALID_CREDENTIALS", "El usuario/correo o la contraseña son incorrectos.");
     }
 
     const response: AuthResponse = {

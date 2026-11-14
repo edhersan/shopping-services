@@ -45,7 +45,7 @@ export const openApiDocument = {
           content: {
             "application/json": {
               schema: { $ref: "#/components/schemas/AuthCredentials" },
-              example: { email: "ana@example.com", password: "password123" },
+              example: { identifier: "Ana Torres", password: "password123" },
             },
           },
         },
@@ -558,9 +558,14 @@ export const openApiDocument = {
           },
           AuthCredentials: {
             type: "object",
-            required: ["email", "password"],
+            required: ["identifier", "password"],
             properties: {
-              email: { type: "string", format: "email", example: "ana@example.com" },
+              identifier: {
+                type: "string",
+                minLength: 1,
+                description: "Nombre de usuario o correo electrónico.",
+                example: "Ana Torres",
+              },
               password: { type: "string", minLength: 8, example: "password123" },
             },
           },

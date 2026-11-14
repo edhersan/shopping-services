@@ -207,14 +207,28 @@ export function validateAuthCredentials(body: unknown): AuthCredentials {
   }
 
   const errors: string[] = [];
-  const email = validateEmail(body.email, errors);
-  const password = validatePassword(body.password, errors);
+  const rawIdentifier = body.identifier ?? body.username ?? body.user ?? body.email;
+  const identifier =
+    typeof rawIdentifier === "string" && rawIdentifier.trim().length > 0
+      ? rawIdentifier.trim()
+      : undefined;
 
-  if (!email || !password || errors.length > 0) {
-    throw new ApiError(400, "VALIDATION_ERROR", "Revisa las credenciales enviadas.", errors);
+  if (!identifier) {
+    errors.push("El usuario o correo electrónico es obligatorio.");
   }
 
-  return { email, password };
+  const password = validatePassword(body.password, errors);
+
+  if (!identifier || !password || errors.length > 0) {
+    throw new ApiError(
+      400,
+      "VALIDATION_ERROR",
+      "Revisa el usuario/correo y la contraseña enviados.",
+      errors,
+    );
+  }
+
+  return { identifier, password };
 }
 
 export function validateRegisterUserRequest(body: unknown): RegisterUserRequest {

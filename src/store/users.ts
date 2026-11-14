@@ -13,6 +13,23 @@ export function findUserByEmail(email: string): StoredUser | undefined {
   return usersByEmail.get(email.toLowerCase());
 }
 
+export function findUserByIdentifier(identifier: string): StoredUser | undefined {
+  const normalizedIdentifier = identifier.trim().toLowerCase();
+  const byEmail = usersByEmail.get(normalizedIdentifier);
+
+  if (byEmail) {
+    return byEmail;
+  }
+
+  for (const user of usersById.values()) {
+    if (user.name.toLowerCase() === normalizedIdentifier) {
+      return user;
+    }
+  }
+
+  return undefined;
+}
+
 export function findUserById(id: string): StoredUser | undefined {
   return usersById.get(id);
 }
